@@ -1,6 +1,6 @@
 import express from 'express';
 
-import MessageResponse from '../interfaces/MessageResponse';
+import MessageResponse from '../../interfaces/MessageResponse';
 import emojis from './emojis';
 
 const router = express.Router();
