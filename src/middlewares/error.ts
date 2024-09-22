@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
-import ErrorResponse from '../interfaces/ErrorResponse'
+import ErrorResponse from '../interfaces/error-response'
 
 export function notFound(req: Request, res: Response, next: NextFunction) {
   res.status(404)
@@ -17,6 +17,6 @@ export function errorHandler(
   res.status(statusCode)
   res.json({
     message: err.message,
-    stack: process.env.NODE_ENV === 'production' ? '🥞' : err.stack,
+    stack: process.env.NODE_ENV === 'production' ? '' : err.stack,
   })
 }
