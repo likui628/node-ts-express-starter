@@ -9,19 +9,24 @@
       "./tsconfig.json"
     ]
   },
-  "extends": "",
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:prettier/recommended"
+  ],
   "plugins": [
     "import",
     "@typescript-eslint"
   ],
   "rules": {
-    "comma-dangle": 0,
-    "no-underscore-dangle": 0,
-    "no-param-reassign": 0,
-    "no-return-assign": 0,
-    "camelcase": 0,
-    "import/extensions": 0,
-    "@typescript-eslint/no-redeclare": 0
+    "semi": 0,
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ]
   },
   "settings": {
     "import/parsers": {
