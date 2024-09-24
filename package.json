@@ -30,9 +30,11 @@
     "morgan": "^1.10.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "cookie-parser": "^1.4.6"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.13",
