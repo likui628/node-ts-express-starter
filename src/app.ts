@@ -3,13 +3,18 @@ import morgan from 'morgan'
 import helmet from 'helmet'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import passport from 'passport'
 
 import routes from './routes/v1'
 import { errorHandler, notFound } from './middlewares'
+import { jwtStrategy } from './config/passport'
 
 dotenv.config()
 
 const app = express()
+
+app.use(passport.initialize())
+passport.use('jwt', jwtStrategy)
 
 app.use(morgan('dev'))
 app.use(helmet())
