@@ -1,3 +1,3 @@
 export * from './error'
 export * from './validate'
-export * from './auth'
+export * from './verify-jwt'

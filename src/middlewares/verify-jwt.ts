@@ -15,7 +15,7 @@ const verifyCallback =
     next()
   }
 
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+export const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
     'jwt',
     { session: false },

@@ -8,7 +8,7 @@ import config from './config'
 
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: config.JWT_SECRET,
+  secretOrKey: config.ACCESS_TOKEN_SECRET,
 }
 
 export const jwtStrategy = new JwtStrategy(
