@@ -3,7 +3,7 @@ import { errorResponse } from '../utils'
 
 export const rateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  limit: 2,
+  limit: 20,
   skipSuccessfulRequests: true,
   handler: (_req, res, _next) => {
     return errorResponse(
