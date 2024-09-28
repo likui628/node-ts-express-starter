@@ -4,11 +4,11 @@ import {
   StrategyOptions,
 } from 'passport-jwt'
 import { prisma } from '../utils'
-import config from './config'
+import env from './env'
 
 const options: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: config.ACCESS_TOKEN_SECRET,
+  secretOrKey: env.ACCESS_TOKEN_SECRET,
 }
 
 export const jwtStrategy = new JwtStrategy(

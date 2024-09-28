@@ -1,16 +1,31 @@
 import { NextFunction, Request, Response } from 'express'
 import { Role } from '@prisma/client'
 import { errorResponse } from '../utils'
+import { roleRights } from '../config/roles'
 
-export const verifyRoles = (...allowedRoles: Role[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!req?.roles) {
-      return errorResponse(res, null, 401, 'Unauthorized')
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Express {
+    interface User {
+      role?: Role
     }
-    const rolesArray = [...allowedRoles]
-    const hasRole = req.roles.some((role) => rolesArray.includes(role))
-    if (!hasRole) {
-      return errorResponse(res, null, 403, 'Forbidden')
+  }
+}
+
+export const verifyRoles = (...requiredRights: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (requiredRights.length) {
+      const userRole = req.user?.role
+      if (!userRole) {
+        return errorResponse(res, null, 403, 'Forbidden')
+      }
+      const userRights = roleRights.get(userRole) || []
+      const hasRequiredRights = requiredRights.every((r) =>
+        userRights.includes(r),
+      )
+      if (!hasRequiredRights) {
+        return errorResponse(res, null, 403, 'Forbidden')
+      }
     }
     next()
   }

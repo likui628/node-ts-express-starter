@@ -18,7 +18,7 @@ model User {
   email      String  @unique
   name       String?
   password   String
-  role       Role[]
+  role       Role?   @default(USER)
   isVerified Boolean
 }
 

@@ -7,8 +7,9 @@ import passport from 'passport'
 import cookieParser from 'cookie-parser'
 
 import routes from './routes/v1'
-import { errorHandler, notFound } from './middlewares'
+import { errorHandler, notFound, verifyJwt } from './middlewares'
 import { jwtStrategy } from './config/passport'
+import { verifyRoles } from './middlewares/verify-roles'
 
 dotenv.config()
 
@@ -23,6 +24,15 @@ app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
 
+app.get(
+  '/protected',
+  verifyJwt,
+  verifyRoles('manageUsers'),
+  (_req, res, _next) => {
+    res.status(200)
+    res.json({})
+  },
+)
 app.use('/v1', routes)
 
 app.use(notFound)
