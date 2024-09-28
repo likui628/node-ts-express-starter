@@ -2,13 +2,14 @@ import winston from 'winston'
 import 'winston-daily-rotate-file'
 
 const transport = new winston.transports.DailyRotateFile({
-  level: 'info',
-  filename: 'logs/%DATE%.log',
-  datePattern: 'YYYY-MM-DD-HH',
-  zippedArchive: true,
-  maxSize: '20m',
-  maxFiles: '14d',
+  level: process.env.LOG_LEVEL || 'info',
+  filename: process.env.LOG_FILE_PATH || 'logs/%DATE%.log',
+  datePattern: process.env.LOG_DATE_PATTERN || 'YYYY-MM-DD-HH',
+  zippedArchive: process.env.LOG_ZIPPED_ARCHIVE === 'true',
+  maxSize: process.env.LOG_MAX_SIZE || '20m',
+  maxFiles: process.env.LOG_MAX_FILES || '14d',
 })
+
 export const logger = winston.createLogger({
   level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
   format: winston.format.combine(
