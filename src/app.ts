@@ -1,5 +1,4 @@
 import express from 'express'
-import morgan from 'morgan'
 import helmet from 'helmet'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -10,6 +9,7 @@ import routes from './routes/v1'
 import { errorHandler, notFound } from './middlewares'
 import { jwtStrategy } from './config/passport'
 import { rateLimiter } from './middlewares/rate-limiter'
+import morgan from './config/morgan'
 
 dotenv.config()
 
@@ -18,7 +18,9 @@ const app = express()
 app.use(passport.initialize())
 passport.use('jwt', jwtStrategy)
 
-app.use(morgan('dev'))
+app.use(morgan.successHandler)
+app.use(morgan.errorHandler)
+
 app.use(helmet())
 app.use(cors())
 app.use(cookieParser())
