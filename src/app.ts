@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser'
 import routes from './routes/v1'
 import { errorHandler, notFound } from './middlewares'
 import { jwtStrategy } from './config/passport'
+import { rateLimiter } from './middlewares/rate-limiter'
 
 dotenv.config()
 
@@ -23,6 +24,9 @@ app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
 
+if (process.env.NODE_ENV === 'production') {
+  app.use('/v1/auth', rateLimiter)
+}
 app.use('/v1', routes)
 
 app.use(notFound)
