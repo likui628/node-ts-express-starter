@@ -12,6 +12,13 @@ export const loginUserWithEmailAndPassword = async (
   }
 
   try {
+    const match = await bcrypt.compare(password, user.password)
+    if (!match) {
+      throw new Error('Password is incorrect')
+    }
+  } catch (error) {
+    logger.error('Error during password comparison:', error)
+    throw new Error('An error occurred during authentication')
   }
 
   return user
