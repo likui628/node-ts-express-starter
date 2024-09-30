@@ -1,5 +1,6 @@
 import { userService } from '.'
 import bcrypt from 'bcrypt'
+import { logger } from '../config/logger'
 
 export const loginUserWithEmailAndPassword = async (
   email: string,
@@ -9,9 +10,8 @@ export const loginUserWithEmailAndPassword = async (
   if (!user) {
     throw new Error('User is not exist')
   }
-  const match = await bcrypt.compare(password, user.password)
-  if (!match) {
-    throw new Error('Password is incorrect')
+
+  try {
   }
 
   return user
