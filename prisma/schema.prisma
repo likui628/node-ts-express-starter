@@ -14,15 +14,37 @@ datasource db {
 }
 
 model User {
-  id         String  @id @default(uuid())
-  email      String  @unique
+  id         String   @id @default(uuid())
+  email      String   @unique
   name       String?
   password   String
-  role       Role?   @default(USER)
+  role       Role?    @default(USER)
   isVerified Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tokens Token[] @relation("userTokens")
+}
+
+model Token {
+  token     String    @id
+  userId    String
+  type      TokenType
+  expires   DateTime
+  isBlocked Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation("userTokens", fields: [userId], references: [id])
 }
 
 enum Role {
   USER
   ADMIN
+}
+
+enum TokenType {
+  REFRESH
+  RESET_PASSWORD
+  VERIFY_EMAIL
 }
