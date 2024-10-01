@@ -28,3 +28,27 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 
   successResponse(res, { ...user, password: undefined, token }, 200)
 })
+
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+  const cookies = req.cookies
+  if (!cookies?.refreshToken) {
+    return successResponse(res, null, 200)
+  }
+  const refreshToken = cookies.refreshToken as string
+
+  const foundToken = await tokenService.getTokenInfo(refreshToken)
+  if (!foundToken) {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+    })
+    return successResponse(res, null, 200)
+  }
+
+  await tokenService.deleteToken(refreshToken)
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+  })
+  return successResponse(res, null, 200)
+})
