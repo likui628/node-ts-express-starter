@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { asyncHandler, successResponse } from '../utils'
+import { asyncHandler, errorResponse, successResponse } from '../utils'
 import { userService, authService, tokenService } from '../services'
 import { User } from '@prisma/client'
 
@@ -51,4 +51,29 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     secure: process.env.NODE_ENV === 'production',
   })
   return successResponse(res, null, 200)
+})
+
+export const refresh = asyncHandler(async (req: Request, res: Response) => {
+  const cookies = req.cookies
+  if (!cookies?.refreshToken) {
+    return errorResponse(res, null, 401, 'Unauthorized')
+  }
+  const refreshToken = cookies.refreshToken as string
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+  })
+
+  const tokenInfo = await tokenService.verifyToken(refreshToken)
+  if (!tokenInfo) {
+    return errorResponse(res, null, 401, 'Unauthorized')
+  }
+
+  const user = await userService.getUserById(tokenInfo.userId)
+  if (!user) {
+    return errorResponse(res, null, 401, 'Unauthorized')
+  }
+
+  const token = await handleTokens(user, res)
+  successResponse(res, { token }, 200)
 })
