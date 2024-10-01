@@ -4,7 +4,6 @@ import env from '../config/env'
 import { prisma } from '../utils'
 import { getTokenExpiration } from '../utils/misc'
 import { logger } from '../config/logger'
-import { isAfter } from 'date-fns'
 
 export const saveToken = async (
   token: string,
