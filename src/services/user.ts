@@ -31,3 +31,16 @@ export const getUserByEmail = async (email: string) => {
     throw new Error('get user failed')
   }
 }
+
+export const getUserById = async (id: string) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id,
+      },
+    })
+    return user
+  } catch (_err: unknown) {
+    throw new Error('get user failed')
+  }
+}
