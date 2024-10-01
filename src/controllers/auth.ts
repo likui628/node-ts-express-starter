@@ -3,8 +3,8 @@ import { asyncHandler, successResponse } from '../utils'
 import { userService, authService, tokenService } from '../services'
 import { User } from '@prisma/client'
 
-function handleTokens(user: User, res: Response) {
-  const { token, refreshToken } = tokenService.generateAuthTokens(user)
+async function handleTokens(user: User, res: Response) {
+  const { token, refreshToken } = await tokenService.generateAuthTokens(user)
 
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
@@ -16,7 +16,7 @@ function handleTokens(user: User, res: Response) {
 
 export const register = asyncHandler(async (req: Request, res: Response) => {
   const user = await userService.createUser(req.body)
-  const token = handleTokens(user, res)
+  const token = await handleTokens(user, res)
 
   successResponse(res, { ...user, password: undefined, token }, 201)
 })
@@ -24,7 +24,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const { email, password } = req.body
   const user = await authService.loginUserWithEmailAndPassword(email, password)
-  const token = handleTokens(user, res)
+  const token = await handleTokens(user, res)
 
   successResponse(res, { ...user, password: undefined, token }, 200)
 })
