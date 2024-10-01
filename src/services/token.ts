@@ -39,3 +39,21 @@ export const generateAuthTokens = async (user: User) => {
 
   return { token, refreshToken }
 }
+
+export const deleteToken = async (token: string) => {
+  await prisma.token.delete({
+    where: {
+      token,
+    },
+  })
+}
+
+export const getTokenInfo = async (token: string) => {
+  const tokenInfo = await prisma.token.findFirst({
+    where: {
+      token,
+    },
+  })
+
+  return tokenInfo
+}
