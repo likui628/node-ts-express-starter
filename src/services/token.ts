@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import env from '../config/env'
 import { prisma } from '../utils'
 import { getTokenExpiration } from '../utils/misc'
+import { logger } from '../config/logger'
 
 export const saveToken = async (
   token: string,
@@ -10,15 +11,20 @@ export const saveToken = async (
   expires: Date,
   type: TokenType = TokenType.REFRESH,
 ) => {
-  const newToken = await prisma.token.create({
-    data: {
-      userId,
-      token,
-      type,
-      expires,
-    },
-  })
-  return newToken
+  try {
+    const newToken = await prisma.token.create({
+      data: {
+        userId,
+        token,
+        type,
+        expires,
+      },
+    })
+    return newToken
+  } catch (error: unknown) {
+    logger.error('Error saving token:', error)
+    throw error
+  }
 }
 
 export const generateAuthTokens = async (user: User) => {
@@ -41,11 +47,16 @@ export const generateAuthTokens = async (user: User) => {
 }
 
 export const deleteToken = async (token: string) => {
-  await prisma.token.delete({
-    where: {
-      token,
-    },
-  })
+  try {
+    await prisma.token.delete({
+      where: {
+        token,
+      },
+    })
+  } catch (error: unknown) {
+    logger.error('Error deleting token:', error)
+    throw error
+  }
 }
 
 export const getTokenInfo = async (token: string) => {
