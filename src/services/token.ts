@@ -4,6 +4,7 @@ import env from '../config/env'
 import { prisma } from '../utils'
 import { getTokenExpiration } from '../utils/misc'
 import { logger } from '../config/logger'
+import { isAfter } from 'date-fns'
 
 export const saveToken = async (
   token: string,
@@ -33,7 +34,7 @@ export const generateAuthTokens = async (user: User) => {
     expiresIn: '1h',
   })
 
-  const refreshToken = jwt.sign(payload, env.REFRESH_TOKEN_SECRET, {
+  const refreshToken = jwt.sign(payload, env.TOKEN_SECRET, {
     expiresIn: '7d',
   })
   await saveToken(
@@ -67,4 +68,14 @@ export const getTokenInfo = async (token: string) => {
   })
 
   return tokenInfo
+}
+
+export const verifyToken = async (token: string) => {
+  jwt.verify(token, env.TOKEN_SECRET)
+
+  const foundToken = await getTokenInfo(token)
+  if (!foundToken) {
+    throw new Error('Token not exist')
+  }
+  return foundToken
 }

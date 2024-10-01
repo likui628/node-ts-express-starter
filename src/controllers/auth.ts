@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { asyncHandler, errorResponse, successResponse } from '../utils'
 import { userService, authService, tokenService } from '../services'
 import { User } from '@prisma/client'
-import { isAfter } from 'date-fns'
 
 async function handleTokens(user: User, res: Response) {
   const { token, refreshToken } = await tokenService.generateAuthTokens(user)
@@ -64,19 +63,17 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
   })
-  const foundToken = await tokenService.getTokenInfo(refreshToken)
-  if (!foundToken) {
-    return errorResponse(res, null, 401, 'Unauthorized')
-  }
-  const tokenExpired = isAfter(new Date(), foundToken.expires)
-  if (tokenExpired) {
+
+  const tokenInfo = await tokenService.verifyToken(refreshToken)
+  if (!tokenInfo) {
     return errorResponse(res, null, 401, 'Unauthorized')
   }
 
-  const user = await userService.getUserById(foundToken.userId)
+  const user = await userService.getUserById(tokenInfo.userId)
   if (!user) {
     return errorResponse(res, null, 401, 'Unauthorized')
   }
+
   const token = await handleTokens(user, res)
   successResponse(res, { token }, 200)
 })

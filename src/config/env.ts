@@ -3,7 +3,7 @@ import { z } from 'zod'
 const envVarsSchema = z.object({
   PORT: z.string().default('5000'),
   ACCESS_TOKEN_SECRET: z.string(),
-  REFRESH_TOKEN_SECRET: z.string(),
+  TOKEN_SECRET: z.string(),
   DATABASE_URL: z.string(),
 })
 

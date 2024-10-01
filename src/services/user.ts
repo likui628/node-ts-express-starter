@@ -1,6 +1,7 @@
 import { prisma } from '../utils'
 import { User } from '@prisma/client'
 import bcrypt from 'bcrypt'
+import { logger } from '../config/logger'
 
 export const createUser = async (user: User) => {
   try {
@@ -14,8 +15,9 @@ export const createUser = async (user: User) => {
       },
     })
     return newUser
-  } catch (_err: unknown) {
-    throw new Error('create user failed')
+  } catch (err: unknown) {
+    logger.error('Failed to create user:', err)
+    throw new Error('Failed to create user')
   }
 }
 
@@ -27,8 +29,9 @@ export const getUserByEmail = async (email: string) => {
       },
     })
     return user
-  } catch (_err: unknown) {
-    throw new Error('get user failed')
+  } catch (err: unknown) {
+    logger.error('Failed to get user by email:', err)
+    throw new Error('Failed to get user by email')
   }
 }
 
@@ -40,7 +43,8 @@ export const getUserById = async (id: string) => {
       },
     })
     return user
-  } catch (_err: unknown) {
-    throw new Error('get user failed')
+  } catch (err: unknown) {
+    logger.error('Failed to get user by id:', err)
+    throw new Error('Failed to get user by id')
   }
 }
