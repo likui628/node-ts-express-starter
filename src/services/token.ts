@@ -2,7 +2,7 @@ import { TokenType, User } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import env from '../config/env'
 import { prisma } from '../utils'
-import { addDays } from 'date-fns'
+import { getTokenExpiration } from '../utils/misc'
 
 export const saveToken = async (
   token: string,
@@ -33,7 +33,7 @@ export const generateAuthTokens = async (user: User) => {
   await saveToken(
     refreshToken,
     user.id,
-    addDays(new Date(), 7),
+    getTokenExpiration(7, 'days'),
     TokenType.REFRESH,
   )
 
