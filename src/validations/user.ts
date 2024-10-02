@@ -10,3 +10,12 @@ export const getUsersSchema = z.object({
     })
     .merge(paginationSchema),
 })
+
+export const createUserSchema = z.object({
+  body: z.object({
+    email: z.string().email(),
+    password: z.string().min(6),
+    name: z.string(),
+    role: z.enum([Role.ADMIN, Role.USER]),
+  }),
+})
