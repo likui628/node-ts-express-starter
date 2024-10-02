@@ -1,6 +1,6 @@
 import { z } from 'zod'
 import { Role } from '@prisma/client'
-import { paginationSchema, password } from './common'
+import { paginationSchema, password, name, email } from './common'
 
 export const getUsersSchema = z.object({
   query: z
@@ -13,9 +13,9 @@ export const getUsersSchema = z.object({
 
 export const createUserSchema = z.object({
   body: z.object({
-    email: z.string().email().max(255),
+    email,
     password,
-    name: z.string().min(1, 'Name cannot be empty').max(100),
+    name,
     role: z.enum([Role.ADMIN, Role.USER]),
   }),
 })

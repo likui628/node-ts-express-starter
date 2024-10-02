@@ -15,3 +15,7 @@ export const password = z
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
     'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character',
   )
+
+export const name = z.string().min(1, 'Name cannot be empty').max(100)
+
+export const email = z.string().email().max(255)
