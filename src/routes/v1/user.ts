@@ -29,5 +29,11 @@ router
     validate(userValidation.getUserSchema),
     userController.getUser,
   )
+  .delete(
+    verifyJwt,
+    verifyRoles('manageUsers'),
+    validate(userValidation.deleteUserSchema),
+    userController.deleteUser,
+  )
 
 export default router

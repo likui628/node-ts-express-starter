@@ -21,3 +21,8 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
   const users = await userService.getUserById(req.params.userId)
   successResponse(res, users)
 })
+
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+  const users = await userService.deleteUserById(req.params.userId)
+  successResponse(res, users)
+})
