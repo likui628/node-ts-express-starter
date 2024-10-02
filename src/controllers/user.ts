@@ -23,6 +23,12 @@ export const getUser = asyncHandler(async (req: Request, res: Response) => {
 })
 
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
-  const users = await userService.deleteUserById(req.params.userId)
+  const { userId } = req.params
+
+  const existingUser = await userService.getUserById(userId)
+  if (!existingUser) {
+    return errorResponse(res, 'User not found', 404)
+  }
+  const users = await userService.deleteUserById(userId)
   successResponse(res, users)
 })
