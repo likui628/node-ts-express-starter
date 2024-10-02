@@ -27,6 +27,7 @@ app.use(express.json())
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/v1/auth', rateLimiter)
+  app.use('/v1/users', rateLimiter)
 }
 app.use('/v1', routes)
 

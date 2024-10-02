@@ -1,7 +1,8 @@
 import { prisma } from '../utils'
-import { Role, User } from '@prisma/client'
+import { User } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { logger } from '../config/logger'
+import { QueryUsers } from '../types'
 
 export const createUser = async (user: User) => {
   try {
@@ -47,18 +48,6 @@ export const getUserById = async (id: string) => {
     logger.error('Failed to get user by id:', err)
     throw new Error('Failed to get user by id')
   }
-}
-
-interface Pagination {
-  orderBy?: string
-  order?: 'asc' | 'desc'
-  limit?: number
-  page?: number
-}
-
-interface QueryUsers extends Pagination {
-  name?: string
-  role?: Role
 }
 
 export const queryUsers = async ({
