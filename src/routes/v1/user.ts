@@ -21,4 +21,13 @@ router
     userController.createUser,
   )
 
+router
+  .route('/:userId')
+  .get(
+    verifyJwt,
+    verifyRoles('getUsers'),
+    validate(userValidation.getUserSchema),
+    userController.getUser,
+  )
+
 export default router

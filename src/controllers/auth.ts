@@ -18,7 +18,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const user = await userService.createUser(req.body)
   const token = await handleTokens(user, res)
 
-  successResponse(res, { ...user, password: undefined, token }, 201)
+  successResponse(res, { ...user, token }, 201)
 })
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password)
   const token = await handleTokens(user, res)
 
-  successResponse(res, { ...user, password: undefined, token }, 200)
+  successResponse(res, { ...user, token }, 200)
 })
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
