@@ -6,9 +6,8 @@ import passport from 'passport'
 import cookieParser from 'cookie-parser'
 
 import routes from './routes/v1'
-import { errorHandler, notFound } from './middlewares'
+import { rateLimiter, errorHandler, notFound } from './middlewares'
 import { jwtStrategy } from './config/passport'
-import { rateLimiter } from './middlewares/rate-limiter'
 import morgan from './config/morgan'
 
 dotenv.config()

@@ -1,3 +1,5 @@
 export * from './error'
 export * from './validate'
 export * from './verify-jwt'
+export * from './verify-roles'
+export * from './rate-limiter'
