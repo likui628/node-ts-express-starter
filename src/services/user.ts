@@ -87,3 +87,16 @@ export const queryUsers = async ({
   })
   return users
 }
+
+export const deleteUserById = async (id: string) => {
+  try {
+    await prisma.user.delete({
+      where: {
+        id,
+      },
+    })
+  } catch (err: unknown) {
+    logger.error(`Failed to delete user by id: ${JSON.stringify(err)}`)
+    throw new Error('Failed to delete user by id')
+  }
+}
