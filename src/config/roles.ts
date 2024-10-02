@@ -2,7 +2,7 @@ import { Role } from '@prisma/client'
 
 const allRoles: Record<Role, string[]> = {
   [Role.USER]: [],
-  [Role.ADMIN]: ['manageUsers'],
+  [Role.ADMIN]: ['getUsers', 'manageUsers'],
 }
 
 export const roles = Object.keys(allRoles) as Role[]

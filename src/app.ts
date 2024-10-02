@@ -6,9 +6,8 @@ import passport from 'passport'
 import cookieParser from 'cookie-parser'
 
 import routes from './routes/v1'
-import { errorHandler, notFound } from './middlewares'
+import { rateLimiter, errorHandler, notFound } from './middlewares'
 import { jwtStrategy } from './config/passport'
-import { rateLimiter } from './middlewares/rate-limiter'
 import morgan from './config/morgan'
 
 dotenv.config()
@@ -28,6 +27,7 @@ app.use(express.json())
 
 if (process.env.NODE_ENV === 'production') {
   app.use('/v1/auth', rateLimiter)
+  app.use('/v1/users', rateLimiter)
 }
 app.use('/v1', routes)
 
