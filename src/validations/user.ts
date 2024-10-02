@@ -19,3 +19,9 @@ export const createUserSchema = z.object({
     role: z.enum([Role.ADMIN, Role.USER]),
   }),
 })
+
+export const getUserSchema = z.object({
+  params: z.object({
+    userId: z.string().uuid(),
+  }),
+})
