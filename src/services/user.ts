@@ -1,5 +1,5 @@
 import { prisma } from '../utils'
-import { User } from '@prisma/client'
+import { Prisma, User } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { logger } from '../config/logger'
 import { QueryUsers } from '../types'
@@ -13,11 +13,17 @@ export const createUser = async (user: User) => {
         name: user.name,
         password: hashedPwd,
         isVerified: false,
+        role: user.role,
       },
     })
     return newUser
   } catch (err: unknown) {
-    logger.error('Failed to create user:', err)
+    logger.error(`Failed to create user: ${JSON.stringify(err)}`)
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      if (err.code === 'P2002') {
+        throw new Error('Failed to create user: email occupied')
+      }
+    }
     throw new Error('Failed to create user')
   }
 }
@@ -31,7 +37,7 @@ export const getUserByEmail = async (email: string) => {
     })
     return user
   } catch (err: unknown) {
-    logger.error('Failed to get user by email:', err)
+    logger.error(`Failed to get user by email: ${JSON.stringify(err)}`)
     throw new Error('Failed to get user by email')
   }
 }
@@ -45,7 +51,7 @@ export const getUserById = async (id: string) => {
     })
     return user
   } catch (err: unknown) {
-    logger.error('Failed to get user by id:', err)
+    logger.error(`Failed to get user by id: ${JSON.stringify(err)}`)
     throw new Error('Failed to get user by id')
   }
 }
