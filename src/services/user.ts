@@ -100,3 +100,23 @@ export const deleteUserById = async (id: string) => {
     throw new Error('Failed to delete user by id')
   }
 }
+
+export const updateUser = async (
+  id: string,
+  user: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
+) => {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        ...user,
+      },
+    })
+    return updatedUser
+  } catch (err: unknown) {
+    logger.error(`Failed to update user by id: ${JSON.stringify(err)}`)
+    throw new Error('Failed to update user by id')
+  }
+}

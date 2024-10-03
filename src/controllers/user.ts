@@ -29,6 +29,17 @@ export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   if (!existingUser) {
     return errorResponse(res, 'User not found', 404)
   }
-  const users = await userService.deleteUserById(userId)
+  await userService.deleteUserById(userId)
+  successResponse(res, null)
+})
+
+export const updateUser = asyncHandler(async (req: Request, res: Response) => {
+  const { userId } = req.params
+
+  const existingUser = await userService.getUserById(userId)
+  if (!existingUser) {
+    return errorResponse(res, 'User not found', 404)
+  }
+  const users = await userService.updateUser(userId, req.body)
   successResponse(res, users)
 })

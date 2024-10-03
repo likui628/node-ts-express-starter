@@ -29,6 +29,12 @@ router
     validate(userValidation.getUserSchema),
     userController.getUser,
   )
+  .patch(
+    verifyJwt,
+    verifyRoles('manageUsers'),
+    validate(userValidation.updateUserSchema),
+    userController.updateUser,
+  )
   .delete(
     verifyJwt,
     verifyRoles('manageUsers'),
