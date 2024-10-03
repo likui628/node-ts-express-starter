@@ -1,16 +1,6 @@
 import { NextFunction, Request, Response } from 'express'
-import { Role } from '@prisma/client'
 import { errorResponse } from '../utils'
 import { roleRights } from '../config/roles'
-
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Express {
-    interface User {
-      role?: Role
-    }
-  }
-}
 
 export const verifyRoles = (...requiredRights: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {

@@ -1,7 +1,8 @@
 import { Request, Response } from 'express'
-import { asyncHandler, errorResponse, successResponse } from '../utils'
+import { asyncHandler } from '../utils'
 import { userService, authService, tokenService } from '../services'
 import { User } from '@prisma/client'
+import { UserData } from '../types'
 
 async function handleTokens(user: User, res: Response) {
   const { token, refreshToken } = await tokenService.generateAuthTokens(user)
@@ -18,7 +19,7 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   const user = await userService.createUser(req.body)
   const token = await handleTokens(user, res)
 
-  successResponse(res, { ...user, token }, 201)
+  res.jsonSuccess<UserData>({ ...user, token }, 201)
 })
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
@@ -26,13 +27,13 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   const user = await authService.loginUserWithEmailAndPassword(email, password)
   const token = await handleTokens(user, res)
 
-  successResponse(res, { ...user, token }, 200)
+  res.jsonSuccess<UserData>({ ...user, token }, 200)
 })
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
   const cookies = req.cookies
   if (!cookies?.refreshToken) {
-    return successResponse(res, null, 200)
+    res.jsonSuccess(undefined, 200)
   }
   const refreshToken = cookies.refreshToken as string
 
@@ -42,7 +43,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     })
-    return successResponse(res, null, 200)
+    res.jsonSuccess(undefined, 200)
   }
 
   await tokenService.deleteToken(refreshToken)
@@ -50,13 +51,13 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
   })
-  return successResponse(res, null, 200)
+  res.jsonSuccess(undefined, 200)
 })
 
 export const refresh = asyncHandler(async (req: Request, res: Response) => {
   const cookies = req.cookies
   if (!cookies?.refreshToken) {
-    return errorResponse(res, null, 401, 'Unauthorized')
+    res.jsonFail(401, 'Unauthorized')
   }
   const refreshToken = cookies.refreshToken as string
   res.clearCookie('refreshToken', {
@@ -66,14 +67,14 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
 
   const tokenInfo = await tokenService.verifyToken(refreshToken)
   if (!tokenInfo) {
-    return errorResponse(res, null, 401, 'Unauthorized')
+    res.jsonFail(401, 'Unauthorized')
   }
 
   const user = await userService.getUserById(tokenInfo.userId)
   if (!user) {
-    return errorResponse(res, null, 401, 'Unauthorized')
+    res.jsonFail(401, 'Unauthorized')
   }
 
-  const token = await handleTokens(user, res)
-  successResponse(res, { token }, 200)
+  const token = await handleTokens(user!, res)
+  res.jsonSuccess<string>(token, 200)
 })
