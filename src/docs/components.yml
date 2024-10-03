@@ -33,7 +33,7 @@ components:
         password: $2b$10$p6Y/y7ZHZSKZh5fseewaTONpOwW3J8ZEpprzf8rDOyydcWH0aUa7S
         createdAt: 2020-05-12T16:18:04.793Z
         updatedAt: 2024-10-02T12:55:04.279Z
-        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMzOTM4ZDU0LWUyZGItNDYyYi1hNjQ1LTg5N2E2ZjdjNzRlNiIsInVzZXJuYW1lIjoibGlrdWkiLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3Mjc5MjM2MDQsImV4cCI6MTcyNzkyNzIwNH0.Oyqr1KHVP6zUXzm4SAkAUk0W88_uV5d2pqMieh6utqA
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
         isVerified: false
 
   securitySchemes:

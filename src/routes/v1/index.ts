@@ -1,7 +1,6 @@
-import express from 'express'
+import express, { Request, Response, NextFunction } from 'express'
 import authRoute from './auth'
 import userRoute from './user'
-import docsRoute from './docs'
 
 const router = express.Router()
 
@@ -20,14 +19,17 @@ defaultRoutes.forEach((route) => {
   router.use(route.path, route.route)
 })
 
-const devRoutes = [
-  {
-    path: '/docs',
-    route: docsRoute,
-  },
-]
-
 if (process.env.NODE_ENV === 'development') {
+  const devRoutes = [
+    {
+      path: '/docs',
+      route: async (req: Request, res: Response, next: NextFunction) => {
+        const docsRoute = await import('./docs')
+        return docsRoute.default(req, res, next)
+      },
+    },
+  ]
+
   devRoutes.forEach((route) => {
     router.use(route.path, route.route)
   })
