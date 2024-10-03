@@ -27,3 +27,10 @@ export const getUserSchema = z.object({
 })
 
 export const deleteUserSchema = getUserSchema
+
+export const updateUserSchema = z.object({
+  params: z.object({
+    userId: z.string().uuid(),
+  }),
+  body: createUserSchema.shape.body.partial(),
+})
