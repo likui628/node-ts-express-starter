@@ -19,8 +19,12 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
 })
 
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
-  const users = await userService.getUserById(req.params.userId)
-  res.jsonSuccess(users)
+  const user = await userService.getUserById(req.params.userId)
+  if (!user) {
+    res.jsonFail(404, 'User not found')
+    return
+  }
+  res.jsonSuccess(user, 200)
 })
 
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
