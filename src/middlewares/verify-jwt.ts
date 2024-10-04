@@ -1,10 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 import passport from 'passport'
+import { logger } from '../config/logger'
 
 const verifyCallback =
   (req: Request, res: Response, next: NextFunction) =>
   async (err: unknown, user: Express.User | null) => {
     if (err) {
+      logger.error(`JWT verification error:${JSON.stringify(err)}`)
       res.jsonFail(500, 'An error occurred', err)
       return
     }

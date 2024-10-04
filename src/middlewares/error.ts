@@ -14,14 +14,9 @@ export function errorHandler(
 ) {
   let errorMessage
   if (err instanceof ZodError) {
-    errorMessage = err.errors
-      .map((e) => ({
-        path: e.path,
-        message: e.message,
-      }))
-      .join('')
+    errorMessage = err.errors.map((e) => `${e.path}: ${e.message}`).join('')
   } else if (err instanceof Error) {
     errorMessage = err.message
   }
-  res.jsonFail(500, errorMessage || 'Unhandled error', err)
+  res.jsonFail(500, errorMessage || 'Unhandled error')
 }
