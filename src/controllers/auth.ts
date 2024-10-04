@@ -57,7 +57,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 export const refresh = asyncHandler(async (req: Request, res: Response) => {
   const cookies = req.cookies
   if (!cookies?.refreshToken) {
-    res.jsonFail(401, 'Unauthorized')
+    res.jsonFail(401, 'Refresh token not found')
   }
   const refreshToken = cookies.refreshToken as string
   res.clearCookie('refreshToken', {
@@ -67,14 +67,14 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
 
   const tokenInfo = await tokenService.verifyToken(refreshToken)
   if (!tokenInfo) {
-    res.jsonFail(401, 'Unauthorized')
+    res.jsonFail(401, 'Invalid refresh token')
   }
 
   const user = await userService.getUserById(tokenInfo.userId)
   if (!user) {
-    res.jsonFail(401, 'Unauthorized')
+    res.jsonFail(401, 'User not found')
+  } else {
+    const token = await handleTokens(user!, res)
+    res.jsonSuccess<string>(token, 200)
   }
-
-  const token = await handleTokens(user!, res)
-  res.jsonSuccess<string>(token, 200)
 })

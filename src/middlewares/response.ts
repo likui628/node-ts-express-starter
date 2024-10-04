@@ -14,11 +14,16 @@ export const responseMiddleware = (
     })
   }
 
-  res.jsonFail = (code, message = 'Fail'): void => {
+  res.jsonFail = (
+    code,
+    message = 'An error occurred',
+    error?: unknown,
+  ): void => {
     res.status(code)
     res.json({
       code,
       message,
+      error,
     })
   }
 
