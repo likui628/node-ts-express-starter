@@ -1,18 +1,27 @@
 import { NextFunction, Request, Response } from 'express'
-import ErrorResponse from '../interfaces/error-response'
-import { errorResponse } from '../utils'
+import { ZodError } from 'zod'
 
 export function notFound(req: Request, res: Response, _next: NextFunction) {
   const error = new Error(`Not Found - ${req.originalUrl}`)
-  return errorResponse(res, error, 404, 'Not Found')
+  res.jsonFail(404, 'Not Found', error)
 }
 
 export function errorHandler(
   err: Error,
   _req: Request,
-  res: Response<ErrorResponse>,
+  res: Response,
   _next: NextFunction,
 ) {
-  const statusCode = res.statusCode !== 200 ? res.statusCode : 500
-  return errorResponse(res, err.message, statusCode, 'Unhandled error')
+  let errorMessage
+  if (err instanceof ZodError) {
+    errorMessage = err.errors
+      .map((e) => ({
+        path: e.path,
+        message: e.message,
+      }))
+      .join('')
+  } else if (err instanceof Error) {
+    errorMessage = err.message
+  }
+  res.jsonFail(500, errorMessage || 'Unhandled error', err)
 }

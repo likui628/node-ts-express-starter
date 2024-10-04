@@ -1,15 +1,16 @@
 import { NextFunction, Request, Response } from 'express'
 import passport from 'passport'
-import { errorResponse } from '../utils'
 
 const verifyCallback =
   (req: Request, res: Response, next: NextFunction) =>
   async (err: unknown, user: Express.User | null) => {
     if (err) {
-      return errorResponse(res, err, 500, 'Unauthorized')
+      res.jsonFail(500, 'An error occurred', err)
+      return
     }
     if (!user) {
-      return errorResponse(res, err, 401, 'Unauthorized')
+      res.jsonFail(401, 'Unauthorized')
+      return
     }
     req.user = user
     next()
