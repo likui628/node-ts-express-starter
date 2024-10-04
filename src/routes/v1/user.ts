@@ -6,6 +6,14 @@ import { userValidation } from '../../validations'
 
 const router = express.Router()
 
+/**
+ * @openapi
+ * tags:
+ *   name: Users
+ *   description: User managements
+ */
+
+// todo: add openapi docs
 router
   .route('/')
   .get(
