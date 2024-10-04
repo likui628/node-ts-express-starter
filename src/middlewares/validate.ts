@@ -1,6 +1,5 @@
 import { ZodError, ZodSchema } from 'zod'
 import { NextFunction, Request, Response } from 'express'
-import { errorResponse } from '../utils'
 import { logger } from '../config/logger'
 
 export function validate(schema: ZodSchema) {
@@ -18,7 +17,7 @@ export function validate(schema: ZodSchema) {
       if (err instanceof ZodError) {
         logger.error(`Validation Errors: ${JSON.stringify(err.issues)}`)
       }
-      errorResponse(res, err, 400, 'Validation Error')
+      res.jsonFail(400, 'Validation Error', err)
     }
   }
 }

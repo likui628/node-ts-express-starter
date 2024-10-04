@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client'
+import { Role, User } from '@prisma/client'
 
 export interface Pagination {
   orderBy?: 'name' | 'email' | 'createdAt' | 'updatedAt'
@@ -10,4 +10,8 @@ export interface Pagination {
 export interface QueryUsers extends Pagination {
   name?: string
   role?: Role
+}
+
+export interface UserData extends User {
+  token: string
 }

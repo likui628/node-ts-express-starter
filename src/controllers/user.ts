@@ -1,25 +1,30 @@
 import { Request, Response } from 'express'
-import { asyncHandler, errorResponse, successResponse } from '../utils'
+import { asyncHandler } from '../utils'
 import { userService } from '../services'
 
 export const getUsers = asyncHandler(async (req: Request, res: Response) => {
   const users = await userService.queryUsers({ ...req.query })
-  successResponse(res, users)
+  res.jsonSuccess(users, 200)
 })
 
 export const createUser = asyncHandler(async (req: Request, res: Response) => {
   const newUser = req.body
   const existingUser = await userService.getUserByEmail(newUser.email)
   if (existingUser) {
-    return errorResponse(res, 'User already exists', 409)
+    res.jsonFail(409, 'User already exists')
+    return
   }
   const user = await userService.createUser(newUser)
-  successResponse(res, user, 201)
+  res.jsonSuccess(user, 201)
 })
 
 export const getUser = asyncHandler(async (req: Request, res: Response) => {
-  const users = await userService.getUserById(req.params.userId)
-  successResponse(res, users)
+  const user = await userService.getUserById(req.params.userId)
+  if (!user) {
+    res.jsonFail(404, 'User not found')
+    return
+  }
+  res.jsonSuccess(user, 200)
 })
 
 export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
@@ -27,10 +32,11 @@ export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
 
   const existingUser = await userService.getUserById(userId)
   if (!existingUser) {
-    return errorResponse(res, 'User not found', 404)
+    res.jsonFail(404, 'User not found')
+    return
   }
   await userService.deleteUserById(userId)
-  successResponse(res, null)
+  res.jsonSuccess(undefined, 200, 'Delete the user successfully')
 })
 
 export const updateUser = asyncHandler(async (req: Request, res: Response) => {
@@ -38,8 +44,9 @@ export const updateUser = asyncHandler(async (req: Request, res: Response) => {
 
   const existingUser = await userService.getUserById(userId)
   if (!existingUser) {
-    return errorResponse(res, 'User not found', 404)
+    res.jsonFail(404, 'User not found')
+    return
   }
-  const users = await userService.updateUser(userId, req.body)
-  successResponse(res, users)
+  const user = await userService.updateUser(userId, req.body)
+  res.jsonSuccess(user)
 })
