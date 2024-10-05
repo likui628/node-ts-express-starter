@@ -2,8 +2,7 @@ import { Prisma, PrismaClient } from '@prisma/client'
 
 export const prisma = new PrismaClient()
 
-export type ModelNames =
-  (typeof Prisma.ModelName)[keyof typeof Prisma.ModelName]
+export type ModelNames = Prisma.ModelName
 
 type PrismaOperations<ModelName extends ModelNames> =
   Prisma.TypeMap['model'][ModelName]['operations']
@@ -31,6 +30,9 @@ export async function paginate<ModelName extends ModelNames>({
   // @ts-expect-error suppress type ModelName cannot be used to index type
   const db = prisma[modelName]
 
+  page = Math.max(1, Math.floor(page))
+  pageSize = Math.max(1, Math.floor(pageSize))
+
   const skip = (page - 1) * pageSize
 
   const [totalCount, items] = await Promise.all([
@@ -46,12 +48,13 @@ export async function paginate<ModelName extends ModelNames>({
     }),
   ])
 
-  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
+  const totalPages = totalCount > 0 ? Math.ceil(totalCount / pageSize) : 0
 
   return {
     items,
     totalCount,
     page,
+    pageSize,
     totalPages,
   }
 }

@@ -64,27 +64,23 @@ export const queryUsers = async ({
   limit = 10,
   page = 1,
 }: QueryUsers) => {
-  const whereConditions: Record<string, unknown> = {}
-  if (name) {
-    whereConditions.name = {
-      contains: name,
-    }
-  }
-  if (role) {
-    whereConditions.role = role
-  }
-
-  const orderByConditions: Record<string, unknown> = {}
-  if (orderBy) {
-    orderByConditions[orderBy] = order
-  }
-
   const result = await paginate({
     modelName: 'User',
     page,
     pageSize: limit,
-    where: whereConditions,
-    orderBy: orderByConditions,
+    where: {
+      role,
+      name: name
+        ? {
+            contains: name,
+          }
+        : undefined,
+    },
+    orderBy: orderBy
+      ? {
+          [orderBy]: order,
+        }
+      : undefined,
   })
 
   return result
