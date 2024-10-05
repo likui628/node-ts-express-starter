@@ -1,4 +1,4 @@
-import { prisma } from '../utils'
+import { paginate, prisma } from '../utils'
 import { Prisma, User } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { logger } from '../config/logger'
@@ -79,26 +79,15 @@ export const queryUsers = async ({
     orderByConditions[orderBy] = order
   }
 
-  const total = await prisma.user.count({
+  const result = await paginate({
+    modelName: 'User',
+    page,
+    pageSize: limit,
     where: whereConditions,
+    orderBy: orderByConditions,
   })
 
-  const totalPages = Math.max(1, Math.ceil(total / limit))
-  const adjustedPage = Math.min(page, totalPages)
-
-  const users = await prisma.user.findMany({
-    where: whereConditions,
-    orderBy: orderBy ? orderByConditions : undefined,
-    take: limit,
-    skip: (adjustedPage - 1) * limit,
-  })
-  return {
-    users,
-    page: adjustedPage,
-    limit,
-    total,
-    totalPages,
-  }
+  return result
 }
 
 export const deleteUserById = async (id: string) => {
