@@ -59,28 +59,24 @@ export const getUserById = async (id: string) => {
 export const queryUsers = async ({
   name,
   role,
-  order,
-  orderBy,
-  limit = 10,
+  order = 'asc',
+  orderBy = 'name',
+  pageSize = 10,
   page = 1,
 }: QueryUsers) => {
+  const where: Prisma.UserWhereInput = {
+    ...(role && { role }),
+    ...(name && { name: { contains: name } }),
+  }
+
   const result = await paginate({
     modelName: 'User',
     page,
-    pageSize: limit,
-    where: {
-      role,
-      name: name
-        ? {
-            contains: name,
-          }
-        : undefined,
+    pageSize,
+    where,
+    orderBy: {
+      [orderBy]: order,
     },
-    orderBy: orderBy
-      ? {
-          [orderBy]: order,
-        }
-      : undefined,
   })
 
   return result

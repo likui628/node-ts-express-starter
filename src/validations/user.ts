@@ -7,6 +7,10 @@ export const getUsersSchema = z.object({
     .object({
       name: z.string().optional(),
       role: z.enum([Role.ADMIN, Role.USER]).optional(),
+      orderBy: z
+        .enum(['name', 'email', 'role', 'createdAt', 'updatedAt'])
+        .optional(),
+      order: z.enum(['asc', 'desc']).optional(),
     })
     .merge(paginationSchema),
 })

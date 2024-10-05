@@ -1,9 +1,9 @@
 import { Role, User } from '@prisma/client'
 
 export interface Pagination {
-  orderBy?: 'name' | 'email' | 'createdAt' | 'updatedAt'
+  orderBy?: string
   order?: 'asc' | 'desc'
-  limit?: number
+  pageSize?: number
   page?: number
 }
 
