@@ -79,13 +79,25 @@ export const queryUsers = async ({
     orderByConditions[orderBy] = order
   }
 
+  const total = await prisma.user.count({
+    where: whereConditions,
+  })
+
+  const totalPages = Math.ceil(total / limit)
+
   const users = await prisma.user.findMany({
     where: whereConditions,
     orderBy: orderBy ? orderByConditions : undefined,
     take: limit,
     skip: (page - 1) * limit,
   })
-  return users
+  return {
+    users,
+    page,
+    limit,
+    total,
+    totalPages,
+  }
 }
 
 export const deleteUserById = async (id: string) => {
