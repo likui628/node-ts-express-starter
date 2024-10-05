@@ -1,4 +1,4 @@
-import { prisma } from '../utils'
+import { paginate, prisma } from '../utils'
 import { Prisma, User } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import { logger } from '../config/logger'
@@ -59,33 +59,27 @@ export const getUserById = async (id: string) => {
 export const queryUsers = async ({
   name,
   role,
-  order,
-  orderBy,
-  limit = 10,
+  order = 'asc',
+  orderBy = 'name',
+  pageSize = 10,
   page = 1,
 }: QueryUsers) => {
-  const whereConditions: Record<string, unknown> = {}
-  if (name) {
-    whereConditions.name = {
-      contains: name,
-    }
-  }
-  if (role) {
-    whereConditions.role = role
+  const where: Prisma.UserWhereInput = {
+    ...(role && { role }),
+    ...(name && { name: { contains: name } }),
   }
 
-  const orderByConditions: Record<string, unknown> = {}
-  if (orderBy) {
-    orderByConditions[orderBy] = order
-  }
-
-  const users = await prisma.user.findMany({
-    where: whereConditions,
-    orderBy: orderBy ? orderByConditions : undefined,
-    take: limit,
-    skip: (page - 1) * limit,
+  const result = await paginate({
+    modelName: 'User',
+    page,
+    pageSize,
+    where,
+    orderBy: {
+      [orderBy]: order,
+    },
   })
-  return users
+
+  return result
 }
 
 export const deleteUserById = async (id: string) => {
