@@ -83,17 +83,18 @@ export const queryUsers = async ({
     where: whereConditions,
   })
 
-  const totalPages = Math.ceil(total / limit)
+  const totalPages = Math.max(1, Math.ceil(total / limit))
+  const adjustedPage = Math.min(page, totalPages)
 
   const users = await prisma.user.findMany({
     where: whereConditions,
     orderBy: orderBy ? orderByConditions : undefined,
     take: limit,
-    skip: (page - 1) * limit,
+    skip: (adjustedPage - 1) * limit,
   })
   return {
     users,
-    page,
+    page: adjustedPage,
     limit,
     total,
     totalPages,
