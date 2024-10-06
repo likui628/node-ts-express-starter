@@ -72,7 +72,7 @@ List of available routes:
 `PATCH /v1/users/:userId` - update user\
 `DELETE /v1/users/:userId` - delete user
 
-## Inspirations
+## Acknowledgment
 
 - [hagopj13/node-express-boilerplate](https://github.com/hagopj13/node-express-boilerplate/)
 - [gitdagray/refresh_token_rotation](https://github.com/gitdagray/refresh_token_rotation)
