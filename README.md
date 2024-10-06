@@ -6,7 +6,7 @@ A boilerplate/starter project for quickly building RESTful APIs using Node.js, E
 
 Clone the repo:
 
-```
+```bash
 git clone --depth 1 https://github.com/likui628/node-ts-express-starter.git
 cd node-ts-express-starter
 npx rimraf ./.git
@@ -37,7 +37,7 @@ cp .env.example .env
 
 ## Project Structure
 
-```
+```plaintext
 prisma\
  |--schema.prisma\  # Prisma schema file
  |--seed.ts\        # Prisma seed file  
@@ -71,6 +71,11 @@ List of available routes:
 `GET /v1/users/:userId` - get user\
 `PATCH /v1/users/:userId` - update user\
 `DELETE /v1/users/:userId` - delete user
+
+## Inspirations
+
+- [hagopj13/node-express-boilerplate](https://github.com/hagopj13/node-express-boilerplate/)
+- [gitdagray/refresh_token_rotation](https://github.com/gitdagray/refresh_token_rotation)
 
 ## License
 
